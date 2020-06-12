@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link
+      rel="icon"
+      href="C:\Users\Lenvo\OneDrive\Desktop\academy\Portfolio Favicon.png"
+      type="image/x-icon"
+    />
+    <style>
+      #fullName{
+        text-transform: uppercase;
+      }
+      
+      #bio{
+        text-shadow:  0 0 3px #FF0000;;
+        font-size: 20px;
+        font-style: italic;
+      }
+      
+      p{
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      
+      #profileImage {
+         border-radius: 8px;
+         border:2px solid #000;
+         color:white;
+        -moz-box-shadow: 10px 10px 50px #ccc;
+        -webkit-box-shadow: 10px 10px 50px #ccc;
+         box-shadow: 10px 10px 50px #ccc;
+      }
+      
+      #profileImage:hover {
+        -moz-box-shadow: 0 0 10px #ccc;
+        -webkit-box-shadow: 0 0 10px #ccc;
+         box-shadow: 0 0 10px #ccc;
+      }
+      
+      a{
+      font-size: 18px;
+      font-family: "Lucida Console", Courier, monospace;
+      }
+      
+      a:hover{
+         color: blue;
+      }
+
+       .btn1{ 
+	      /* box-shadow: 3px 4px 0px 0px #899599;  */
+	      /* background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%); */
+	      background-color:#ededed;
+	      border: 0px;
+	      /* border:1px solid #d6bcd6;  */
+	      /* display:inline-block; */
+	      cursor:pointer;
+	      /* color:#273f3e; */
+	      font-family:Arial;
+        outline: none;
+	      font-size:17px;
+	      padding:7px 25px;
+	      text-decoration:none;
+	      /* text-shadow:0px 1px 0px #e1e2ed; */
+       } 
+      
+       .btn1:focus{
+        border: 0px none;
+        outline: none;
+       }
+      
+      body {
+        background-image: url("Portfolio Background.jpg");
+      }
+      
+      body,html {
+        height: 100%;
+        margin: 0;
+      }
+
+      .bg {
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      
+      .main {
+        text-align: center;
+      }
+    
+    </style>
+  </head>
+  <body>
+    <div id="Loading">
+      <img
+        src="C:\Users\Lenvo\OneDrive\Desktop\academy\loading.gif"
+        width="100%"
+        height="100%"
+      />
+    </div>
+    <div class="main" id="mainContainer" hidden>
+      <img
+           src="C:\Users\Lenvo\OneDrive\Desktop\academy\Portfolio thumbnail.png"
+      />
+      <br />
+      <img width="100" height="100" id="profileImage" />
+      <h2 id="fullName"></h2>
+      <p id="bio"></p>
+      <p>Check me on <a id="githubLink">Github</a></p>
+      <p>List of all my <a id="reposList">Repositories</a></p>
+
+      <div>
+        <div id="list">
+          <div id="each-list" class="each-list">
+            <a href="#" id="each_name"></a>
+          </div>
+        </div>
+        <br />
+        <!-- <input type="button" id="first" onclick="firstPage()" value="first" /> -->
+  
+        <input type="button" class="btn1" id="next" onclick="nextPage()" value="Next" />
+        <input
+          type="button"
+          class="btn1"
+          id="previous"
+          onclick="previousPage()"
+          value="Previous"
+        />
+        <!-- <input type="button" id="last" onclick="lastPage()" value="last" /> -->
+    </div>
+  </div>
+    <div class="bg"></div>
+    <script>
+      var list = new Array();
+      var pageList = new Array();
+      var currentPage = 0;
+      var numberPerPage = 2;
+      var numberOfPages = 0;
+      numberOfPages = getNumberOfPages();
+      function makelist() {
+        fetch("https://api.github.com/users/prabhavaidya08")
+          .then((response) => response.json())
+          .then(function (data) {
+            fetch(data["repos_url"])
+              .then((response) => response.json())
+              .then(function (data1) {
+                console.log(data1);
+                list = data1;
+                nextPage();
+              });
+            // console.log(data);
+            document.getElementById("profileImage").src = data["avatar_url"];
+            document.getElementById("fullName").textContent = data["name"];
+            document.getElementById("bio").textContent = data["bio"];
+            document.getElementById("githubLink").href = data["html_url"];
+            document.getElementById("mainContainer").hidden = false;
+            document.getElementById("Loading").hidden = true;
+            document.getElementById("reposList").href = data["repos_url"];
+          });
+      }
+      console.log(list);
+
+      function getNumberOfPages() {
+        return Math.ceil(list.length / numberPerPage);
+      }
+
+      function nextPage() {
+        currentPage += 1;
+        loadList();
+      }
+
+      function previousPage() {
+        currentPage -= 1;
+        loadList();
+      }
+
+      // function firstPage() {
+      //   currentPage = 1;
+      //   loadList();
+      // }
+
+      // function lastPage() {
+      //   currentPage = numberOfPages;
+      //   loadList();
+      // }
+
+      function loadList() {
+        var begin = (currentPage - 1) * numberPerPage;
+        var end = begin + numberPerPage;
+
+        console.log("current page", currentPage);
+        if (currentPage < 0) {
+          pageList = list.slice(begin, end);
+          currentPage = list.length / numberPerPage;
+          drawList();
+        } else if (currentPage > list.length / numberPerPage) {
+          currentPage = 0;
+          pageList = list.slice(begin, end);
+          drawList(); // draws out our data
+          // check();       // determines the states of the pagination buttons
+        } else {
+          pageList = list.slice(begin, end);
+          drawList();
+        }
+      }
+
+      function drawList() {
+        console.log("draw mmm");
+        var a = document.getElementById("each-list");
+        document.getElementById("each-list").innerHTML = "";
+        // console.log(list[0]);
+        for (r = 0; r < pageList.length; r++) {
+          console.log(r);
+          console.log(pageList[r]);
+
+          let test_anchor = document.createElement("a");
+          test_anchor.href = pageList[r]["html_url"];
+          test_anchor.innerHTML = pageList[r]["name"] + "<br/>";
+          a.appendChild(test_anchor);
+          console.log(a);
+
+          // document.getElementById("each_name").innerHTML +=
+          //   pageList[r]["name"] + "<br/>";
+        }
+      }
+
+      function check() {
+        document.getElementById("next").disabled =
+          currentPage == numberOfPages ? true : false;
+        document.getElementById("previous").disabled =
+          currentPage == 1 ? true : false;
+        document.getElementById("first").disabled =
+          currentPage == 1 ? true : false;
+        document.getElementById("last").disabled =
+          currentPage == numberOfPages ? true : false;
+      }
+      function load() {
+        makelist();
+        // nextPage();
+      }
+
+      window.onload = load;
+    </script>
+  </body>
+</html>
