@@ -49,24 +49,33 @@
          color: blue;
       }
 
-       .btn1{ 
-	      /* box-shadow: 3px 4px 0px 0px #899599;  */
-	      /* background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%); */
-	      background-color:#ededed;
-	      border: 0px;
-	      /* border:1px solid #d6bcd6;  */
-	      /* display:inline-block; */
-	      cursor:pointer;
-	      /* color:#273f3e; */
+      .btn{ 
+        box-shadow: 3px 4px 0px 0px #899599;
+	      background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+      	background-color:#ededed;
+      	border-radius:15px;
+	      border:1px solid #d6bcd6;
+      	display:inline-block;
+      	cursor:pointer;
+	      color:#304f4e;
 	      font-family:Arial;
-        outline: none;
 	      font-size:17px;
 	      padding:7px 25px;
 	      text-decoration:none;
-	      /* text-shadow:0px 1px 0px #e1e2ed; */
-       } 
+	      text-shadow:0px 1px 0px #e1e2ed;
+	    } 
+
+      .btn:hover {
+	      background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+	      background-color:#bab1ba;
+     }
       
-       .btn1:focus{
+      .btn:active {
+	      position:relative;
+	      top:1px;
+      }
+      
+      .btn:focus{
         border: 0px none;
         outline: none;
        }
@@ -110,6 +119,7 @@
       <h2 id="fullName"></h2>
       <p id="bio"></p>
       <p>Check me on <a id="githubLink">Github</a></p>
+      <h3><u>MY PROJECTS</u></h3>
       <p>List of all my <a id="reposList">Repositories</a></p>
 
       <div>
@@ -121,10 +131,10 @@
         <br />
         <!-- <input type="button" id="first" onclick="firstPage()" value="first" /> -->
   
-        <input type="button" class="btn1" id="next" onclick="nextPage()" value="Next" />
+        <input type="button" class="btn" id="next" onclick="nextPage()" value="Next" />
         <input
           type="button"
-          class="btn1"
+          class="btn"
           id="previous"
           onclick="previousPage()"
           value="Previous"
@@ -237,6 +247,7 @@
         document.getElementById("last").disabled =
           currentPage == numberOfPages ? true : false;
       }
+      
       function load() {
         makelist();
         // nextPage();
